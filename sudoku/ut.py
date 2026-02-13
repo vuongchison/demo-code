@@ -74,7 +74,7 @@ def test_solver():
     c1 = NotEqualConstraint(v1, v2)
     c2 = NotEqualConstraint(v3, v2)
     c3 = NotEqualConstraint(v3, v4)
-    solver = CPSolver({v1, v2, v3, v4}, {c1, c2})
+    solver = CPSolver({v1, v2, v3, v4}, {c1, c2, c3})
     solution = solver.solve()
     assert solution[v1] == 1
     assert solution[v2] == 2

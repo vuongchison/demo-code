@@ -1,4 +1,5 @@
 from copy import copy
+import time
 
 n = int(input())
 v = [int(x) for x in input().split()]
@@ -42,6 +43,7 @@ def backtrack(i):
         if v_curr > best_value:
             best_sol = copy(choose)
             best_value = v_curr
+            print("new best:", best_value)
         return
     
     for value in (0, 1):
@@ -55,9 +57,10 @@ def backtrack(i):
             v_curr -= v[i]
             w_curr -= w[i]
 
+print("Solving...")
+t = time.time()
 sort_items()
-print(v)
-print(w)
 backtrack(0)
+print("Solve in:", time.time() - t, "s")
 print(best_sol)
 print(best_value)

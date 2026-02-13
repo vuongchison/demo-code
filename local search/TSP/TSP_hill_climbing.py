@@ -1,22 +1,25 @@
 import random
-import math
 import matplotlib.pyplot as plt
+import time
 
 # -------- Problem --------
-N = 100
-CITIES = list(range(N))
+N = 0
+CITIES = []
+POINTS = []
+DIST = []
 
-# Generate random 2D points (x, y)
-POINTS = [(random.randint(0, 500), random.randint(0, 500)) for _ in range(N)]
+def read_data():
+    global N, CITIES, POINTS, DIST
+    N = int(input())
+    CITIES = list(range(N))
+    for _ in range(N):
+        x, y = input().strip().split()
+        x = int(x)
+        y = int(y)
+        POINTS.append((x, y))
+    for _ in range(N):
+        DIST.append([float(d) for d in input().strip().split()])
 
-# Calculate Euclidean distance matrix
-DIST = [[0.0]*N for _ in range(N)]
-for i in range(N):
-    for j in range(i+1, N):
-        x1, y1 = POINTS[i]
-        x2, y2 = POINTS[j]
-        d = math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
-        DIST[i][j] = DIST[j][i] = d
 
 def tour_length(tour):
     return sum(DIST[tour[i]][tour[i+1]] for i in range(len(tour)-1)) \
@@ -55,8 +58,6 @@ def best_neighbor_swap(tour):
                 best_neighbor = new_tour
     return best_neighbor, best_length
 
-
-
 def best_neighbor_2_opt(tour):
     best_neighbor = None
     best_length = float('inf')
@@ -87,9 +88,10 @@ def hill_climbing(current_tour):
         
 
 if __name__ == "__main__":
-
+    read_data()
+    t = time.time()
     best_tour, best_len = hill_climbing(init_tour())
-
+    print('solve in:', time.time() - t)
     print("Best tour:", best_tour)
     print("Best length:", best_len)
     plot_tour(best_tour, POINTS)

@@ -1,33 +1,40 @@
 import random
-import math
 import matplotlib.pyplot as plt
 from collections import defaultdict
+import time
 
 
 # ==================
 #Problem
-N = 10
-CAPACITY = 4
-MAX_RIDE = 60
+N = 0
+CAPACITY = 0
+MAX_RIDE = 0
 # ===================
 
-LOCATIONS = [f"R{i}" for i in range(N)] + [f"C{i}" for i in range(N)]
+LOCATIONS = []
 
-
-# Generate random 2D points (x, y)
-POINTS = [(random.randint(0, 50), random.randint(0, 50)) for _ in range(2 * N)]
+# 2D points (x, y)
+POINTS = []
 NAME_POINTS = {LOCATIONS[i]: POINTS[i] for i in range(2 * N)}
 
 # Calculate Euclidean distance matrix
 DIST = defaultdict(dict)
-for i in range(2 * N):
-    for j in range(i+1, 2 * N):
-        x1, y1 = POINTS[i]
-        x2, y2 = POINTS[j]
-        d = math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
-        DIST[LOCATIONS[i]][LOCATIONS[j]] = DIST[LOCATIONS[j]][LOCATIONS[i]] = d
 
-# print(DIST)
+def read_data():
+    global N, CAPACITY, MAX_RIDE, LOCATIONS, POINTS, NAME_POINTS, DIST
+    N = int(input())
+    CAPACITY = int(input())
+    MAX_RIDE = int(input())
+    LOCATIONS = [f"R{i}" for i in range(N)] + [f"C{i}" for i in range(N)]
+    for _ in range(2 * N):
+        x, y = input().strip().split()
+        x = int(x)
+        y = int(y)
+        POINTS.append((x, y))
+    NAME_POINTS = {LOCATIONS[i]: POINTS[i] for i in range(2 * N)}
+    for i in range(2 * N):
+        for j, d in enumerate(input().strip().split()):
+            DIST[LOCATIONS[i]][LOCATIONS[j]] = DIST[LOCATIONS[j]][LOCATIONS[i]] = float(d)
 
 def plot_tour(tour):
     x = [NAME_POINTS[i][0] for i in tour]
@@ -145,19 +152,16 @@ def guided_local_search(max_iter=10000):
         if is_feasible(current_tour) and current_tour_len < best_len:
             best = current_tour
             best_len = current_tour_len
-            print("Best tour:", best)
+            # print("Best tour:", best)
             print("Best length:", best_len)
-        
-        if _ % 100 == 0:
-            print("Current len:", current_tour_len, "| precedence_violation:", precedence_violation(current_tour), "| capacity_violation:", capacity_violation(current_tour), "| cold_violation:", cold_violation(current_tour))
-            print("lambda1:", lambda1, "| lambda2:", lambda2, "| lambda3:", lambda3)
 
     return best, best_len
 
 if __name__ == "__main__":
-    best_tour, best_length = min((guided_local_search() for _ in range(10)), key=lambda t: t[1])
-    # best_tour, best_length = guided_local_search()
-    # best_tour = init_tour()
+    read_data()
+    t = time.time()
+    best_tour, best_length = min((guided_local_search() for _ in range(1)), key=lambda t: t[1])
+    print('============\nsolve in:', time.time() - t)
     print("Best tour:", best_tour)
     print("Best length:", best_length)
     if best_tour:
